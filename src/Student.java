@@ -9,7 +9,7 @@
  */
 public class Student {
     
-    public Student (String firstName, String lastName, int studentNum){
+    public Student (String firstName, String lastName, String studentNum){
         
     }
     

@@ -9,7 +9,7 @@
  */
 public class InstrumentArchive {
     
-    public InstrumentArchive (String firstName, String lastName, int studentNum, String intruNum, String dateIn, String dateOut){
+    public InstrumentArchive (String firstName, String lastName, String studentNum, String intruNum, String dateIn, String dateOut){
         
     }
     
