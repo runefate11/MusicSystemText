@@ -11,11 +11,11 @@ package musicsystemtext;
  */
 public class MusicSystemText {
 
-    public void signOut (){
+    public void signOut (int studentNum, int barcode){
         
     }
     
-    public void signIn (){
+    public void signIn (int barcode){
         
     }
     

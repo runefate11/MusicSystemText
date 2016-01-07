@@ -8,7 +8,7 @@
  * @author 348564469
  */
 public class Instrument {
-    public Instrument (String instruNum, String make, int serial, String model, boolean taken){
+    public Instrument (String instruNum, String make, int barcode, String model, boolean taken){
         
     }
 }
