@@ -12,16 +12,15 @@ import java.util.Scanner;
  */
 public class MusicSystemText {
 
-    public void signOut (String studentNum, String barcode){
-        String [] fileLine;
-        File studentFile = new File ("studentFile.txt");
-        
-        boolean studentFound = false;
-        
-        String firstName;
-        String lastName;
-        
+    public void signOut(String studentNum, String barcode) {
+        String[] fileLine;
         Scanner scan = null;
+
+        boolean studentFound = false;
+        String firstName = "";
+        String lastName = "";
+
+        File studentFile = new File("studentFile.txt");
         try {
             scan = new Scanner(studentFile);
             // continue running through file until end or until match is found
@@ -38,17 +37,11 @@ public class MusicSystemText {
         } catch (IOException e) { // if file not found, output message
             System.out.println("Can't find file.");
         }
-        
-        if (studentFound == false){
-            System.out.println("That student was not found.");
-        }
-        
-        File instrumentFile = new File ("instrumentFile.txt");
-        
+
         boolean instrumentFound = false;
-        
-        String instruNum;
-        
+        String instruNum = "";
+
+        File instrumentFile = new File("instrumentFile.txt");
         try {
             scan = new Scanner(instrumentFile);
             // continue running through file until end or until match is found
@@ -64,61 +57,90 @@ public class MusicSystemText {
         } catch (IOException e) { // if file not found, output message
             System.out.println("Can't find file.");
         }
+
+        if (studentFound == false) {
+            System.out.println("That student was not found.");
+        }
         
-        if (instrumentFound == false){
+        if (instrumentFound == false) {
             System.out.println("That instrument was not found.");
         }
-        
-        ////////////////////////////////////////////////////////////////////////
-        
-        File signOutFile = new File("signOutFile.txt"); // open file
-        try {
-            PrintWriter regWriter = new PrintWriter(new FileWriter(signOutFile, true));
-            regWriter.println();
-            regWriter.close();
-        } catch (IOException e) {
-            System.out.println("Can't find file.");
+
+        if (studentFound == true && instrumentFound == true) {
+            File signOutFile = new File("signOutFile.txt"); // open file
+            try {
+                PrintWriter archiveWriter = new PrintWriter(new FileWriter(signOutFile, true));
+                String signOutDate = ""; /// add date code
+                InstrumentArchive i = new InstrumentArchive(firstName, lastName, studentNum, instruNum, signOutDate, "-");
+                archiveWriter.println(i);
+                archiveWriter.close();
+            } catch (IOException e) {
+                System.out.println("Can't find file.");
+            }
         }
     }
-    
-    public void signIn (int barcode){
+
+    public void signIn(String barcode) {
+        String[] fileLine;
+        Scanner scan = null;
         
-    }
-    
-    public void addArchive(){
+        boolean instrumentFound = false;
+        String instruNum = "";
+
+        File instrumentFile = new File("instrumentFile.txt");
+        try {
+            scan = new Scanner(instrumentFile);
+            // continue running through file until end or until match is found
+            while (scan.hasNext()) {
+                fileLine = scan.nextLine().split(",");
+                // if the username and passwords match, log into account
+                if (barcode.equals(fileLine[2])) {
+                    instrumentFound = true;
+                    instruNum = fileLine[0];
+                }
+            }
+            scan.close();
+        } catch (IOException e) { // if file not found, output message
+            System.out.println("Can't find file.");
+        }
+
         
+        ////// add more code
     }
-    
-    public void addInstrument(){
-        
+
+    public void addArchive() {
+
     }
-    
-   public void removeInstrument(){
-        
+
+    public void addInstrument() {
+
     }
-    
-    public void addStudent(){
-        
+
+    public void removeInstrument() {
+
     }
-    
-    public void removeStudent(){
-        
+
+    public void addStudent() {
+
     }
-    
-    public void search (int searchField){
-        
+
+    public void removeStudent() {
+
     }
-    
-    public void seeSignOuts (){
-        
+
+    public void search(int searchField) {
+
     }
-    
-    
+
+    public void seeSignOuts() {
+
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
     }
-    
+
 }
