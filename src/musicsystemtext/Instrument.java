@@ -10,7 +10,21 @@ package musicsystemtext;
  * @author 348564469
  */
 public class Instrument {
-    public Instrument (String instruNum, String make, String barcode, String model){
-        
+
+    String instruNum;
+    String make;
+    int barcode;
+    String model;
+
+    public Instrument(String instruNum, String make, int barcode, String model) {
+        this.instruNum = instruNum;
+        this.make = make;
+        this.barcode = barcode;
+        this.model = model;
+    }
+
+    @Override
+    public String toString() {
+        return this.instruNum + "," + this.make + "," + this.barcode + "," + this.model;
     }
 }

@@ -10,9 +10,19 @@ package musicsystemtext;
  * @author 348564469
  */
 public class Student {
-    
-    public Student (String firstName, String lastName, String studentNum){
-        
+
+    String firstName;
+    String lastName;
+    String studentNum;
+
+    public Student(String firstName, String lastName, String studentNum) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.studentNum = studentNum;
     }
-    
+
+    @Override
+    public String toString() {
+        return this.firstName + "," + this.lastName + "," + this.studentNum;
+    }
 }
