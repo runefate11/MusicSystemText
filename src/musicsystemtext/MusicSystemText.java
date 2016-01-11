@@ -60,14 +60,8 @@ public class MusicSystemText {
             System.out.println("Can't find file.");
         }
 
-        if (studentFound == false) {
-            System.out.println("That student was not found.");
-        }
+        ///////////////////add code to check if the instrument is alrdy signed out of not. only sign out instrument if it hasnt been signed out
         
-        if (instrumentFound == false) {
-            System.out.println("That instrument was not found.");
-        }
-
         if (studentFound == true && instrumentFound == true) {
             File signOutFile = new File("signOutFile.txt"); // open file
             try {
@@ -79,15 +73,16 @@ public class MusicSystemText {
             } catch (IOException e) {
                 System.out.println("Can't find file.");
             }
+        } else {
+            System.out.println ("The instrument barcode or student ID doesn't exist.");
         }
     }
 
     public void signIn(String barcode) {
         String[] fileLine;
         Scanner scan = null;
-        
+
         boolean instrumentFound = false;
-        String instruNum = "";
 
         File instrumentFile = new File("instrumentFile.txt");
         try {
@@ -95,10 +90,8 @@ public class MusicSystemText {
             // continue running through file until end or until match is found
             while (scan.hasNext()) {
                 fileLine = scan.nextLine().split(",");
-                // if the username and passwords match, log into account
                 if (barcode.equals(fileLine[2])) {
                     instrumentFound = true;
-                    instruNum = fileLine[0];
                 }
             }
             scan.close();
@@ -106,8 +99,34 @@ public class MusicSystemText {
             System.out.println("Can't find file.");
         }
 
-        
-        ////// add more code
+        ArrayList<InstrumentArchive> list = new ArrayList<>();
+        InstrumentArchive objectPlaceholder;
+        boolean instrumentSignedOut = false;
+
+        if (instrumentFound == true) {
+            File signOutFile = new File("signOutFile.txt"); // open file
+            try {
+                scan = new Scanner(signOutFile);
+                while (scan.hasNext()) {
+                    fileLine = scan.nextLine().split(",");
+                    if (barcode.equals(fileLine[2])) {
+                        instrumentSignedOut = true;
+                        addArchive(fileLine[0], fileLine[1], fileLine[2], fileLine[3], fileLine[4], fileLine[5]);
+                    } else {
+                        list.add(new InstrumentArchive(fileLine[0], fileLine[1], fileLine[2], fileLine[3], fileLine[4], fileLine[5]));
+                    }
+                }
+                scan.close();
+                
+                if (instrumentSignedOut == false){
+                    System.out.println ("The instrument you are trying to sign in has not been signed out yet.");
+                }
+            } catch (IOException e) { // if file not found, output message
+                System.out.println("Can't find file.");
+            }
+        } else{
+            System.out.println("The instrument you are trying to sign in doesn't exist.");
+        }
     }
 
     /**
@@ -158,6 +177,7 @@ public class MusicSystemText {
             System.out.println("File not found");
         }
     }
+
     /**
      * This is the removal method for an instrument Gregory Wong
      *
@@ -240,11 +260,12 @@ public class MusicSystemText {
             System.out.println("File not found");
         }
     }
+
     /**
-     * This is a removal method for students from the student list
-     * Admin Function
-     * Gregory Wong
-     * @param studentNum Student number 
+     * This is a removal method for students from the student list Admin
+     * Function Gregory Wong
+     *
+     * @param studentNum Student number
      */
     public void removeStudent(String studentNum) {
         //create a list for the instruments in the file currently
@@ -264,9 +285,9 @@ public class MusicSystemText {
             //assign values based on parsing
             String firstName = line[0];
             String lastName = line[1];
-            String num = line [2];
+            String num = line[2];
             //create a student object
-            Student s = new Student (firstName, lastName, num);
+            Student s = new Student(firstName, lastName, num);
             //add to the list of students in the file
             list.add(s);
         }
