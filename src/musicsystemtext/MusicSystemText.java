@@ -19,22 +19,31 @@ import java.util.logging.Logger;
  */
 public class MusicSystemText {
 
+    /**
+     * Takes in a student code and a instrument code, and basically signs out
+     * that instrument under that student. It first checks if the student and
+     * instrument exists. Then it checks if the instrument has been sign out
+     * before. Only checks out the instrument if student exists; instrument
+     * exists; an instrument is not signed out
+     *
+     * @param studentNum - the student number that is scanned
+     * @param barcode - the instrument barcode that is scanned
+     */
     public void signOut(String studentNum, String barcode) {
-        String[] fileLine;
+        String[] fileLine; // holds the split line
         Scanner scan = null;
 
-        boolean studentFound = false;
-        String firstName = "";
-        String lastName = "";
-
-        File studentFile = new File("studentFile.txt");
+        boolean studentFound = false; // tells if the student was found or not
+        String firstName = ""; // stores the first name that corresponds to that student number
+        String lastName = ""; // stores the last name that corresponds to that student number
+        File studentFile = new File("studentFile.txt"); // open file of student records
         try {
             scan = new Scanner(studentFile);
             // continue running through file until end or until match is found
             while (scan.hasNext()) {
-                fileLine = scan.nextLine().split(",");
-                // if the username and passwords match, log into account
-                if (studentNum.equals(fileLine[2])) {
+                fileLine = scan.nextLine().split(","); // read and split line
+                if (studentNum.equals(fileLine[2])) { // if the student numeberrs match...
+                    // state that the student exists and store their first and last name
                     studentFound = true;
                     firstName = fileLine[0];
                     lastName = fileLine[1];
@@ -42,60 +51,63 @@ public class MusicSystemText {
                 }
             }
             scan.close();
-        } catch (IOException e) { // if file not found, output message
+        } catch (IOException e) { // if any error occurs, output message
             System.out.println("Can't find file.");
         }
 
-        boolean instrumentFound = false;
-        String instruNum = "";
-
-        File instrumentFile = new File("instrumentFile.txt");
+        boolean instrumentFound = false; // tells if the instrument was found or not
+        String instruNum = ""; // stores the instrument name that corresponds to that barcode
+        File instrumentFile = new File("instrumentFile.txt"); // open file of instrument records
         try {
             scan = new Scanner(instrumentFile);
             // continue running through file until end or until match is found
             while (scan.hasNext()) {
-                fileLine = scan.nextLine().split(",");
-                // if the username and passwords match, log into account
-                if (barcode.equals(fileLine[2])) {
+                fileLine = scan.nextLine().split(","); // read and split line
+                if (barcode.equals(fileLine[2])) { // if the barcodes match...
+                    // state that the instrument exists and store its instrument name
                     instrumentFound = true;
                     instruNum = fileLine[0];
                     break;
                 }
             }
             scan.close();
-        } catch (IOException e) { // if file not found, output message
+        } catch (IOException e) { // if any error occurs, output message
             System.out.println("Can't find file.");
         }
 
+        // only run if the instrument and student exists
         if (studentFound == true && instrumentFound == true) {
-            boolean instrumentSignOuted = false;
-            File signOutFile = new File("signOutFile.txt"); // open file
+            boolean instrumentSignOuted = false; // tells if the instrument has been signed out
+            File signOutFile = new File("signOutFile.txt"); // open file of instruments signed out
             try {
                 scan = new Scanner(signOutFile);
                 // continue running through file until end or until match is found
                 while (scan.hasNext()) {
-                    fileLine = scan.nextLine().split(",");
-                    // if the username and passwords match, log into account
-                    if (instruNum.equals(fileLine[3])) {
+                    fileLine = scan.nextLine().split(","); // read and split line
+                    if (instruNum.equals(fileLine[3])) { // if the instrument names match...
+                        // state that the instrument has been signed out
                         instrumentSignOuted = true;
                         break;
                     }
                 }
                 scan.close();
-            } catch (IOException e) {
+            } catch (IOException e) { // if any error occurs, output message
                 System.out.println("Can't find file.");
             }
 
+            // only run if the instrument has been not signed out
             if (instrumentSignOuted == false) {
                 try {
-                    PrintWriter archiveWriter = new PrintWriter(new FileWriter(signOutFile, true));
+                    PrintWriter archiveWriter = new PrintWriter(new FileWriter(signOutFile, true)); // add to end of file
+                    // initialize date formating and get current date
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                    Date date = new Date();
-                    String signOutDate = dateFormat.format(date);
+                    String signOutDate = dateFormat.format(new Date());
+                    // create instrument
                     InstrumentArchive i = new InstrumentArchive(firstName, lastName, studentNum, instruNum, signOutDate, "-");
+                    // print to archive file and close the writer
                     archiveWriter.println(i);
                     archiveWriter.close();
-                } catch (IOException e) {
+                } catch (IOException e) { // if any error occurs, output message
                     System.out.println("There is an error.");
                 }
             } else {
@@ -106,53 +118,81 @@ public class MusicSystemText {
         }
     }
 
+    /**
+     * Takes in a instrument barcode and signs in the instrument only if the
+     * instrument exists and it has been signed out. Takes out that entry in the
+     * sign out file and places it into the archive file
+     *
+     * @param barcode - the instrument barcode that is scanned
+     */
     public void signIn(String barcode) {
-        String[] fileLine;
+        String[] fileLine; // holds the split line
         Scanner scan = null;
 
-        boolean instrumentFound = false;
+        boolean instrumentFound = false; // tells if the instrument was found or not
+        String instruNum = ""; // stores the instrument name that corresponds to that barcode
 
-        File instrumentFile = new File("instrumentFile.txt");
+        File instrumentFile = new File("instrumentFile.txt"); // open file of isntrument records
         try {
             scan = new Scanner(instrumentFile);
             // continue running through file until end or until match is found
             while (scan.hasNext()) {
-                fileLine = scan.nextLine().split(",");
-                if (barcode.equals(fileLine[2])) {
+                fileLine = scan.nextLine().split(","); // read and split line
+                if (barcode.equals(fileLine[2])) { // barcode matches...
+                    // state that the instrument exists and store its instrument name
                     instrumentFound = true;
+                    instruNum = fileLine[0];
+                    break;
                 }
             }
             scan.close();
-        } catch (IOException e) { // if file not found, output message
+        } catch (IOException e) { // if any error occurs, output message
             System.out.println("Can't find file.");
         }
 
-        ArrayList<InstrumentArchive> list = new ArrayList<>();
-        InstrumentArchive objectPlaceholder;
-        boolean instrumentSignedOut = false;
+        ArrayList<InstrumentArchive> list = new ArrayList<>(); // array of 
+        boolean instrumentSignedOut = false;  // tells if the instrument has been signed out of not
 
+        /// only run if the instrument exists
         if (instrumentFound == true) {
-            File signOutFile = new File("signOutFile.txt"); // open file
+            File signOutFile = new File("signOutFile.txt"); // open file of signed out instruments
             try {
                 scan = new Scanner(signOutFile);
+                // continue running through file until end
                 while (scan.hasNext()) {
-                    fileLine = scan.nextLine().split(",");
-                    if (barcode.equals(fileLine[2])) {
+                    fileLine = scan.nextLine().split(","); // read and split line
+                    if (instruNum.equals(fileLine[3])) { // if instrument names match...
+                        // state that the instrument has been signed out
                         instrumentSignedOut = true;
+                        // get the current date
                         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                         Date date = new Date();
                         String signInDate = dateFormat.format(date);
+                        // add instrument to archive
                         addArchive(fileLine[0], fileLine[1], fileLine[2], fileLine[3], fileLine[4], signInDate);
                     } else {
+                        // add instrument to list (it skips over the instrument that is signed in)
                         list.add(new InstrumentArchive(fileLine[0], fileLine[1], fileLine[2], fileLine[3], fileLine[4], fileLine[5]));
                     }
                 }
                 scan.close();
+                
+                try {
+                    PrintWriter file = new PrintWriter(signOutFile); // rewrite over whole sign out file
+                    // loop through the whole array list and write it to the file
+                    for (int count = 0; count < list.size(); count++) {
+                        file.println(list.get(count));
+                    }
+                    file.close();
+                } catch (IOException e) { // if any error occurs, output message
+                    System.out.println("Can't find file.");
+                }
 
+                // let user know if the instrument hasn't been signed out yet
                 if (instrumentSignedOut == false) {
                     System.out.println("The instrument you are trying to sign in has not been signed out yet.");
                 }
-            } catch (IOException e) { // if file not found, output message
+            } catch (IOException e) {// if any error occurs, output message
                 System.out.println("Can't find file.");
             }
         } else {
@@ -312,8 +352,14 @@ public class MusicSystemText {
 
     /**
      * Gregory Wong and Devanjith Ganepola
-     *
-     * @param searchField Index of the field that is desired
+     * @param searchField   The field that admin wants to search through
+     *                      0 - first name
+     *                      1 - last name
+     *                      2 - student number
+     *                      3 - instrument number
+     *                      4 - date in
+     *                      5 - date out
+     * @param searchItem    The actual value you are searching for
      */
     public void searchArchive(int searchField, String searchItem) {
         //create scanner object for reading the file
@@ -338,9 +384,12 @@ public class MusicSystemText {
 
     /**
      * Gregory Wong and Devanjith Ganepola
-     *
-     * @param searchField
-     * @param searchItem
+     * @param searchField   The field that admin wants to search through
+     *                      0 - instrument number
+     *                      1 - instrument make
+     *                      2 - barcode
+     *                      3 - instrument model
+     * @param searchItem    The actual value you are searching for
      */
     public void searchInstruments(int searchField, String searchItem) {
         //create scanner object for reading the file
@@ -363,8 +412,25 @@ public class MusicSystemText {
         }
     }
 
+    /**
+     *
+     */
     public void seeSignOuts() {
-
+        Scanner scan = null;
+        String[] fileLine;
+        InstrumentArchive i;
+        File signOutFile = new File("signOutFile.txt"); // open file
+        try {
+            scan = new Scanner(signOutFile);
+            while (scan.hasNext()) {
+                fileLine = scan.nextLine().split(",");
+                i = new InstrumentArchive(fileLine[0], fileLine[1], fileLine[2], fileLine[3], fileLine[4], fileLine[5]);
+                System.out.println(i.printing());
+            }
+            scan.close();
+        } catch (IOException e) { // if file not found, output message
+            System.out.println("Can't find file.");
+        }
     }
 
     /**
