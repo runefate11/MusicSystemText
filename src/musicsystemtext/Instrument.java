@@ -13,14 +13,19 @@ public class Instrument {
 
     String instruNum;
     String make;
-    int barcode;
+    String barcode;
     String model;
 
-    public Instrument(String instruNum, String make, int barcode, String model) {
+    public Instrument(String instruNum, String make, String barcode, String model) {
         this.instruNum = instruNum;
         this.make = make;
         this.barcode = barcode;
         this.model = model;
+    }
+    
+    public String printing () {
+        String item = String.format("%-15s %-10s %-20s %-15s", instruNum, make, barcode, model);
+        return item;
     }
 
     @Override

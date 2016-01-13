@@ -20,6 +20,11 @@ public class Student {
         this.lastName = lastName;
         this.studentNum = studentNum;
     }
+    
+     public String printing() {
+        String item = String.format("%-15s %-15s %-10s",firstName, lastName, studentNum );
+        return item;
+    }
 
     @Override
     public String toString() {

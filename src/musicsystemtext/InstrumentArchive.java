@@ -27,6 +27,11 @@ public class InstrumentArchive {
         this.dateOut = dateOut;
     }
 
+    public String printing() {
+        String item = String.format("%-15s %-15s %-10s %-15s,%-15,%-15",firstName, lastName, studentNum, instruNum,dateIn, dateOut);
+        return item;
+    }
+    
     @Override
     public String toString() {
         return this.firstName + "," + this.lastName + "," + this.studentNum + "," + this.instruNum + "," + this.dateIn + "," + this.dateOut;
